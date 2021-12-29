@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YearOne.Models.Entities
 {
-    public class Cookie
+    public class FullCookie
     {
         public int CookieId { get; set; }
 

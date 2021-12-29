@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Year_One.Services.Interfaces;
+using YearOne.Models.Entities;
 using YearOne.Models.Requests;
 
 namespace Year_One.Services
@@ -17,7 +18,8 @@ namespace Year_One.Services
     {
         private readonly IConfiguration _config;
 
-        Cookie _cookie = new Cookie();
+        FullCookie _cookie = new FullCookie();
+        User _user = new User();
 
         public CookieService(IConfiguration configuration)
         {
@@ -32,14 +34,16 @@ namespace Year_One.Services
             }
         }
 
-        public async Task<IEnumerable<Cookie>> GetCookieTypes()
+        public async Task<IEnumerable<FullCookie>> GetCookieTypes()
         {
-
+          
             using (IDbConnection dbConnection = Connection)
             {
-                var result = await Connection.QueryAsync<Cookie>("[dbo].[GetCookies]", commandType: CommandType.StoredProcedure);
 
-                return result;
+                var results = await Connection.QueryAsync<FullCookie>("[dbo].[GetCookies]", commandType: CommandType.StoredProcedure);
+
+                return results;
+
             }
         }
 
@@ -64,6 +68,23 @@ namespace Year_One.Services
             }
         }
 
+        public async Task<User> Login(UserLogin loginRequest)
+        {
+            using(IDbConnection dbConnection = Connection)
+            {
+                var proc = "[dbo].[User_Login]";
+                var parameter = new DynamicParameters();
+
+                parameter.Add("email", loginRequest.Email);
+                parameter.Add("password", loginRequest.Password);
+
+                var reponse = await Connection.QueryAsync<User>(proc, parameter, commandType: CommandType.StoredProcedure);
+
+                _user = reponse.FirstOrDefault();
+
+                return _user;
+            }
+        }
 
     }
 }
