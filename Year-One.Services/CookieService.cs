@@ -20,6 +20,7 @@ namespace Year_One.Services
 
         FullCookie _cookie = new FullCookie();
         User _user = new User();
+        Recipe _recipe = new Recipe();
 
         public CookieService(IConfiguration configuration)
         {
@@ -72,19 +73,74 @@ namespace Year_One.Services
         {
             using(IDbConnection dbConnection = Connection)
             {
-                var proc = "[dbo].[User_Login]";
+                var proc = "[dbo].[UserLogin]";
                 var parameter = new DynamicParameters();
 
                 parameter.Add("email", loginRequest.Email);
                 parameter.Add("password", loginRequest.Password);
 
-                var reponse = await Connection.QueryAsync<User>(proc, parameter, commandType: CommandType.StoredProcedure);
+                var response = await Connection.QueryAsync<User>(proc, parameter, commandType: CommandType.StoredProcedure);
 
-                _user = reponse.FirstOrDefault();
+                _user = response.FirstOrDefault();
 
                 return _user;
             }
         }
+
+        public async Task<FullCookie> AddCookie(CookieAddRequest cookieRequest)
+        {
+            using(IDbConnection dbConnection = Connection)
+            {
+                var proc = "[dbo].[InsertCookie]";
+                var parameter = new DynamicParameters();
+
+                parameter.Add("CookieName", cookieRequest.CookieName);
+                parameter.Add("CookieImageUrl", cookieRequest.CookieImageUrl);
+
+                var response = await Connection.QueryAsync<FullCookie>(proc, parameter, commandType: CommandType.StoredProcedure);
+
+                _cookie = response.FirstOrDefault();
+
+                return _cookie;
+
+            }
+        }
+
+        public async Task<Recipe> AddRecipe(RecipeAddRequest recipeRequest)
+        {
+            using(IDbConnection dbConnection = Connection)
+            {
+                var proc = "[dbo].[InsertRecipe]";
+                var parameter = new DynamicParameters();
+
+                parameter.Add("CookieType", recipeRequest.CookieType);
+                parameter.Add("Url", recipeRequest.Url);
+                parameter.Add("Description", recipeRequest.Description);
+
+                var response = await Connection.QueryAsync<Recipe>(proc, parameter, commandType: CommandType.StoredProcedure);
+
+                _recipe = response.FirstOrDefault();
+
+                return _recipe;
+
+            }
+        }
+
+        public async Task<IEnumerable<Recipe>> GetRecipe(int id)
+        {
+            _recipe = new Recipe();
+
+            using(IDbConnection dbConnection = Connection)
+            {
+                var proc = "[dbo].[GetRecipes]";
+
+                var response = await Connection.QueryAsync<Recipe>(proc, new { id }, commandType: CommandType.StoredProcedure);
+
+                return response.ToList();
+            }
+        }
+
+        
 
     }
 }

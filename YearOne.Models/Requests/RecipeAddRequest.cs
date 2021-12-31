@@ -13,7 +13,11 @@ namespace YearOne.Models.Requests
         public int CookieType { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 1)]
+        [StringLength(255, MinimumLength = 1)]
         public string Url { get; set; }
+
+        
+        [StringLength(50, MinimumLength = 0)]
+        public string Description { get; set; }
     }
 }

@@ -16,5 +16,11 @@ namespace Year_One.Services.Interfaces
         Task<int> AddUser(UserAddRequest user);
 
         Task<User> Login(UserLogin loginRequest);
+
+        Task<FullCookie> AddCookie(CookieAddRequest cookieRequest);
+
+        Task<Recipe> AddRecipe(RecipeAddRequest recipeRequest);
+
+        Task<IEnumerable<Recipe>> GetRecipe(int id);
     }
 }

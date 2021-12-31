@@ -35,6 +35,17 @@ namespace Year_One_Holiday_BE
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Year_One_Holiday_BE", Version = "v1" });
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CORSPolicy",
+
+                      builder => builder.WithOrigins("http://localhost:3000")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                    );
+            });
+
             services.AddSingleton<ICookieService, CookieService>();
         }
 
@@ -49,10 +60,11 @@ namespace Year_One_Holiday_BE
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("CORSPolicy");
             app.UseRouting();
 
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

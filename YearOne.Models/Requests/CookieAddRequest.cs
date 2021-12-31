@@ -14,7 +14,7 @@ namespace YearOne.Models.Requests
         public string CookieName { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(255, MinimumLength = 1)]
         public string CookieImageUrl { get; set; }
     }
 }

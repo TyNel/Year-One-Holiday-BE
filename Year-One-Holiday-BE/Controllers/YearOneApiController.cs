@@ -42,5 +42,26 @@ namespace Year_One_Holiday_BE.Controllers
         {
             return Ok(await _service.Login(loginRequest));
         }
+
+        [HttpPost("addCookie")]
+
+        public async Task<IActionResult> AddCookie([FromBody] CookieAddRequest cookieRequest)
+        {
+            return Ok(await _service.AddCookie(cookieRequest));
+        }
+
+        [HttpPost("addRecipe")]
+
+        public async Task<IActionResult> AddRecipe([FromBody] RecipeAddRequest recipeRequest)
+        {
+            return Ok(await _service.AddRecipe(recipeRequest));
+        }
+
+        [HttpGet("recipe")]
+
+        public async Task<IActionResult> GetRecipe(int id)
+        {
+            return Ok(await _service.GetRecipe(id));
+        }
     } 
 }
