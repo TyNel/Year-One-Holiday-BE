@@ -19,5 +19,9 @@ namespace YearOne.Models.Requests
         
         [StringLength(50, MinimumLength = 0)]
         public string Description { get; set; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 1)]
+        public string WebsiteName { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace YearOne.Models.Requests
     public class UserLikedRecipe
     {
         [Required]
-        public int RecipeId { get; set; }
+        public int RecipesId { get; set; }
 
         [Required]
         public int UserId { get; set; }
