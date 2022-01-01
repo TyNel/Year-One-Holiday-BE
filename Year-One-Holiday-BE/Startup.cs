@@ -30,46 +30,57 @@ namespace Year_One_Holiday_BE
         {
 
             services.AddControllers();
+            services.AddInfrastructure();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Year_One_Holiday_BE", Version = "v1" });
+            });
+
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CORSPolicy",
 
-                      builder => builder.WithOrigins("http://localhost:3000")
+                      builder => builder.WithOrigins("http://localhost:3000", "https://year-one-tyler.netlify.app")
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials()
                     );
             });
 
-            services.AddSingleton<ICookieService, CookieService>();
+
+            services.AddScoped<ICookieService, CookieService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+          
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Year_One_Holiday_BE v1"));
-            }
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Year_One_Holiday_BE v1");
+                    c.RoutePrefix = string.Empty;
+                });
+               
+            
 
             app.UseHttpsRedirection();
             app.UseCors("CORSPolicy");
             app.UseRouting();
-
-            app.UseAuthorization();
-
+      
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         }
     }
 }

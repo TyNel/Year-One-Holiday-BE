@@ -68,7 +68,7 @@ namespace Year_One_Holiday_BE.Controllers
                 return StatusCode(500, response);
             }
         }
-
+        
         [HttpPost("login")]
 
         public async Task<IActionResult> Login([FromBody] UserLogin loginRequest)
@@ -209,6 +209,8 @@ namespace Year_One_Holiday_BE.Controllers
                 return StatusCode(500, response);
             }
         }
+
+      
 
 
 

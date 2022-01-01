@@ -203,8 +203,9 @@ namespace Year_One.Services
 
             using (IDbConnection dbConnection = Connection)
             {
+                var proc = "[dbo].[GetEmail]";
 
-                var user = await Connection.QueryAsync<User>("[dbo].[GetEmail]", new { email }, commandType: CommandType.StoredProcedure);
+                var user = await Connection.QueryAsync<User>(proc, new { email }, commandType: CommandType.StoredProcedure);
 
                 _user = user.FirstOrDefault();
 
@@ -214,6 +215,6 @@ namespace Year_One.Services
             }
         }
 
-
+       
     }
 }
