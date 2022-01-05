@@ -30,5 +30,7 @@ namespace Year_One.Services.Interfaces
         Task<RecipeLiked> DislikedRecipe(UserLikedRecipe recipeDislike);
 
         Task<User> GetByEmail(string email);
+
+        Task<User> UpdatePassword(PasswordUpdateRequest userRequest);
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Year_One.Services.CommonMethods;
 using Year_One.Services.Interfaces;
 using YearOne.Models.Entities;
 using YearOne.Models.Requests;
@@ -61,7 +62,7 @@ namespace Year_One.Services
                 parameter.Add("@FirstName", user.FirstName);
                 parameter.Add("@LastName", user.LastName);
                 parameter.Add("@Email", user.Email);
-                parameter.Add("@Password", user.Password);
+                parameter.Add("@Password", PwManager.Encrypt(user.Password));
 
                 await Connection.QueryAsync<int>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -78,8 +79,8 @@ namespace Year_One.Services
                 var proc = "[dbo].[UserLogin]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("email", loginRequest.Email);
-                parameter.Add("password", loginRequest.Password);
+                parameter.Add("@Email", loginRequest.Email);
+                parameter.Add("@Password", PwManager.Encrypt(loginRequest.Password));
 
                 var response = await Connection.QueryAsync<User>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -96,8 +97,8 @@ namespace Year_One.Services
                 var proc = "[dbo].[InsertCookie]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("CookieName", cookieRequest.CookieName);
-                parameter.Add("CookieImageUrl", cookieRequest.CookieImageUrl);
+                parameter.Add("@CookieName", cookieRequest.CookieName);
+                parameter.Add("@CookieImageUrl", cookieRequest.CookieImageUrl);
 
                 var response = await Connection.QueryAsync<FullCookie>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -115,10 +116,10 @@ namespace Year_One.Services
                 var proc = "[dbo].[InsertRecipe]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("CookieType", recipeRequest.CookieType);
-                parameter.Add("Url", recipeRequest.Url);
-                parameter.Add("Description", recipeRequest.Description);
-                parameter.Add("WebsiteName", recipeRequest.WebsiteName);
+                parameter.Add("@CookieType", recipeRequest.CookieType);
+                parameter.Add("@Url", recipeRequest.Url);
+                parameter.Add("@Description", recipeRequest.Description);
+                parameter.Add("@WebsiteName", recipeRequest.WebsiteName);
 
                 var response = await Connection.QueryAsync<Recipe>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -152,9 +153,9 @@ namespace Year_One.Services
                 var proc = "[dbo].[UserLike]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("RecipesId", recipeLikeRequest.RecipesId);
-                parameter.Add("UserId", recipeLikeRequest.UserId);
-                parameter.Add("isLike", recipeLikeRequest.isLike);
+                parameter.Add("@RecipesId", recipeLikeRequest.RecipesId);
+                parameter.Add("@UserId", recipeLikeRequest.UserId);
+                parameter.Add("@isLike", recipeLikeRequest.isLike);
 
                 var response = await Connection.QueryAsync<FullRecipe>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -186,9 +187,9 @@ namespace Year_One.Services
                 var proc = "[dbo].[userDislike]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("RecipesId", recipeDislike.RecipesId);
-                parameter.Add("UserId", recipeDislike.UserId);
-                parameter.Add("isLike", recipeDislike.isLike);
+                parameter.Add("@RecipesId", recipeDislike.RecipesId);
+                parameter.Add("@UserId", recipeDislike.UserId);
+                parameter.Add("@isLike", recipeDislike.isLike);
 
                 var response = await Connection.QueryAsync<RecipeLiked>(proc, parameter, commandType: CommandType.StoredProcedure);
 
@@ -212,6 +213,26 @@ namespace Year_One.Services
 
                 return _user;
 
+            }
+        }
+
+        public async Task<User> UpdatePassword(PasswordUpdateRequest userRequest)
+        {
+            _user = new User();
+
+            using (IDbConnection dbConnection = Connection)
+            {
+                var proc = "[dbo].[UpdatePassword]";
+                var parameter = new DynamicParameters();
+
+                parameter.Add("@userId", userRequest.UserId);
+                parameter.Add("@password", PwManager.Encrypt(userRequest.Password));
+
+                var user = await Connection.QueryAsync<User>(proc, parameter, commandType: CommandType.StoredProcedure);
+
+                _user = user.FirstOrDefault();
+
+                return _user;
             }
         }
 
