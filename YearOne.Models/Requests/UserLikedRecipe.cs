@@ -10,13 +10,13 @@ namespace YearOne.Models.Requests
     public class UserLikedRecipe
     {
         [Required]
-        public int RecipesId { get; set; }
+        public int LikeParentId { get; set; }
 
         [Required]
         public int UserId { get; set; }
 
         [Required]
         [Range(0, 1)]
-        public byte isLike { get; set; }
+        public int IsLike { get; set; }
     }
 }

@@ -198,32 +198,6 @@ namespace Year_One_Holiday_BE.Controllers
             return Ok(await _service.GetLikes(id));
         }
 
-        [HttpPut("disliked")]
-
-        public async Task<IActionResult> DislikedRecipe(UserLikedRecipe recipeDislike)
-        {
-
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequestModelState();
-                }
-                else
-                {
-                    return Ok(await _service.DislikedRecipe(recipeDislike));
-                }
-
-            }
-
-            catch (Exception ex)
-            {
-                ErrorResponse response = new ErrorResponse($"Error: ${ex.Message}");
-
-                return StatusCode(500, response);
-            }
-        }
-
         [HttpPut("passwordUpdate")]
 
         public async Task<IActionResult> UpdatePassword(PasswordUpdateRequest userRequest)

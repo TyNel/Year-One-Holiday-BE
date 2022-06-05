@@ -23,11 +23,9 @@ namespace Year_One.Services.Interfaces
 
         Task<IEnumerable<Recipe>> GetRecipe(int id);
 
-        Task<FullRecipe> LikedRecipe(UserLikedRecipe recipeLikeRequest);
+        Task<RecipeLiked> LikedRecipe(UserLikedRecipe recipeLikeRequest);
 
         Task<IEnumerable<RecipeLiked>> GetLikes(int id);
-
-        Task<RecipeLiked> DislikedRecipe(UserLikedRecipe recipeDislike);
 
         Task<User> GetByEmail(string email);
 

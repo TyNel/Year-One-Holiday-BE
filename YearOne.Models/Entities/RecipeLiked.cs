@@ -8,13 +8,9 @@ namespace YearOne.Models.Entities
 {
     public class RecipeLiked
     {
-        public int RecipeId { get; set; }
-
-        public int CookieType { get; set; }
-
+        public int LikeParentId { get; set; }
+        public int IsLike { get; set; }
         public int UserId { get; set; }
-
-        public byte IsLike { get; set; }
 
     }
 }

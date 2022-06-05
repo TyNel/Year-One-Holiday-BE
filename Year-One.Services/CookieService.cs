@@ -132,9 +132,7 @@ namespace Year_One.Services
 
         public async Task<IEnumerable<Recipe>> GetRecipe(int id)
         {
-      
-
-            using(IDbConnection dbConnection = Connection)
+            using (IDbConnection dbConnection = Connection)
             {
                 var proc = "[dbo].[GetRecipes]";
 
@@ -144,24 +142,22 @@ namespace Year_One.Services
             }
         }
 
-        public async Task<FullRecipe> LikedRecipe(UserLikedRecipe recipeLikeRequest)
+        public async Task<RecipeLiked> LikedRecipe(UserLikedRecipe recipeLikeRequest)
         {
-            _fullrecipe = new FullRecipe();
-
+            
             using (IDbConnection dbConnection = Connection)
             {
                 var proc = "[dbo].[UserLike]";
                 var parameter = new DynamicParameters();
 
-                parameter.Add("@RecipesId", recipeLikeRequest.RecipesId);
+                parameter.Add("@Id", 0, DbType.Int32, ParameterDirection.Output);
+                parameter.Add("@likeParentId", recipeLikeRequest.LikeParentId);
                 parameter.Add("@UserId", recipeLikeRequest.UserId);
-                parameter.Add("@isLike", recipeLikeRequest.isLike);
+                parameter.Add("@isLike", recipeLikeRequest.IsLike);
 
-                var response = await Connection.QueryAsync<FullRecipe>(proc, parameter, commandType: CommandType.StoredProcedure);
+                var response = await Connection.QueryAsync<RecipeLiked>(proc, parameter, commandType: CommandType.StoredProcedure);
 
-                _fullrecipe = response.FirstOrDefault();
-
-                return _fullrecipe;
+                return response.FirstOrDefault();
             }
         }
 
@@ -175,26 +171,6 @@ namespace Year_One.Services
                 var response = await Connection.QueryAsync<RecipeLiked>(proc, new { id }, commandType: CommandType.StoredProcedure);
 
                 return response.ToList();
-            }
-        }
-
-        public async Task<RecipeLiked> DislikedRecipe(UserLikedRecipe recipeDislike)
-        {
-            _fullrecipe = new FullRecipe();
-
-            using (IDbConnection dbConnection = Connection)
-            {
-                var proc = "[dbo].[userDislike]";
-                var parameter = new DynamicParameters();
-
-                parameter.Add("@RecipesId", recipeDislike.RecipesId);
-                parameter.Add("@UserId", recipeDislike.UserId);
-                parameter.Add("@isLike", recipeDislike.isLike);
-
-                var response = await Connection.QueryAsync<RecipeLiked>(proc, parameter, commandType: CommandType.StoredProcedure);
-
-                return response.FirstOrDefault();
-
             }
         }
 

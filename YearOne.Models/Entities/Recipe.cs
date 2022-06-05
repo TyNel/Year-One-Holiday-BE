@@ -18,5 +18,7 @@ namespace YearOne.Models.Entities
 
         public string WebsiteName { get; set; }
 
+     
+
     }
 }
